@@ -15,7 +15,7 @@ available from the website here:
 <http://groupware.les.inf.puc-rio.br/har> (see the section on the Weight
 Lifting Exercise Dataset).
 
-# Data 
+# Data
 
 The training data for this project is available here:
 
@@ -40,12 +40,11 @@ and the report are given in the `Links` section below.
 # Links
 
 **Github Page** For Project:
-https://github.com/pacificprince/predmachlearn/project
+https://github.com/pacificprince/PracticalMLCourseProject
 
 **gh-page branch** for Project Report:
-http://pacificprince.github.io/mlcoursera/project.html
+http://pacificprince.github.io/PracticalMLCourseProject/project.html
 
 **gh-page branch** for Project Readme:
-http://pacificprince.github.io/mlcoursera/
+http://pacificprince.github.io/PracticalMLCourseProject
 
-## 
