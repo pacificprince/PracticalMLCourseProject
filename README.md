@@ -43,7 +43,7 @@ and the report are given in the `Links` section below.
 https://github.com/pacificprince/PracticalMLCourseProject
 
 **gh-page branch** for Project Report:
-http://pacificprince.github.io/PracticalMLCourseProject/project.html
+http://pacificprince.github.io/project.html
 
 **gh-page branch** for Project Readme:
 http://pacificprince.github.io/PracticalMLCourseProject
