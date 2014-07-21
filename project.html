@@ -1,0 +1,933 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <meta name="generator" content="pandoc" />
+  <meta name="author" content="Student" />
+  <meta name="date" content="2011-07-19" />
+  <title>Predicting Quality of Personal Activity using Machine Learning Algorithms</title>
+  <style type="text/css">code{white-space: pre;}</style>
+  <style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #f8f8f8; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+pre, code { background-color: #f8f8f8; }
+code > span.kw { color: #204a87; font-weight: bold; }
+code > span.dt { color: #204a87; }
+code > span.dv { color: #0000cf; }
+code > span.bn { color: #0000cf; }
+code > span.fl { color: #0000cf; }
+code > span.ch { color: #4e9a06; }
+code > span.st { color: #4e9a06; }
+code > span.co { color: #8f5902; font-style: italic; }
+code > span.ot { color: #8f5902; }
+code > span.al { color: #ef2929; }
+code > span.fu { color: #000000; }
+code > span.er { font-weight: bold; }
+  </style>
+  <link href="data:text/css,html%20%7B%20font%2Dsize%3A%20100%25%3B%20overflow%2Dy%3A%20scroll%3B%20%2Dwebkit%2Dtext%2Dsize%2Dadjust%3A%20100%25%3B%20%2Dms%2Dtext%2Dsize%2Dadjust%3A%20100%25%3B%20%7D%0A%0Abody%7B%0A%2F%2A%20color%3A%23444%3B%20%2A%2F%0A%2F%2A%20font%2Dfamily%3A%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20%22Open%20Sans%22%2C%20Arial%2C%20sans%2Dserif%3B%20%2A%2F%0Afont%2Dfamily%3A%20Georgia%2C%20Palatino%2C%20%27Palatino%20Linotype%27%2C%20Times%2C%20%27Times%20New%20Roman%27%2C%20serif%3B%20%0Afont%2Dsize%3A110%25%3B%0Aline%2Dheight%3A%201%2E5em%3B%0Apadding%3A1em%3B%0Amargin%3Aauto%3B%0Amax%2Dwidth%3A80em%3B%0Abackground%3A%23fefefe%3B%0Awidth%3A920px%3B%0Amargin%2Dleft%3A%20275px%3B%0A%7D%0A%0Aa%7B%20color%3A%20%230645ad%3B%20text%2Ddecoration%3Anone%3B%7D%0Aa%2Ca%3Avisited%2Ccode%20%7Bcolor%3A%23f06024%3B%7D%0Aa%3Ahover%7B%20color%3A%20%2306e%3B%20%7D%0Aa%3Aactive%7B%20color%3A%23faa700%3B%20%7D%0Aa%3Afocus%7B%20outline%3A%20thin%20dotted%3B%20%7D%0Aa%3Ahover%2C%20a%3Aactive%7B%20outline%3A%200%3B%20%7D%0A%0A%3A%3A%2Dmoz%2Dselection%7Bbackground%3Argba%28255%2C255%2C0%2C0%2E3%29%3Bcolor%3A%23000%7D%0A%3A%3Aselection%7Bbackground%3Argba%28255%2C255%2C0%2C0%2E3%29%3Bcolor%3A%23000%7D%0A%0Aa%3A%3A%2Dmoz%2Dselection%7Bbackground%3Argba%28255%2C255%2C0%2C0%2E3%29%3Bcolor%3A%230645ad%7D%0Aa%3A%3Aselection%7Bbackground%3Argba%28255%2C255%2C0%2C0%2E3%29%3Bcolor%3A%230645ad%7D%0A%0Ap%7B%0Amargin%3A1em%200%3B%0A%7D%0A%0Aimg%7B%0Amax%2Dwidth%3A100%25%3B%0A%7D%0A%0Ah1%2Ch2%2Ch3%2Ch4%2Ch5%2Ch6%7B%0Afont%2Dweight%3Anormal%3B%0Acolor%3A%20%23527bbd%3B%0Amargin%2Dtop%3A%201%2E0em%3B%0Amargin%2Dbottom%3A%200%2E5em%3B%0Aline%2Dheight%3A0%2E5em%3B%0A%7D%0Ah4%2Ch5%2Ch6%7B%20font%2Dweight%3A%20bold%3B%20%7D%0Ah1%7B%20font%2Dsize%3A2%2E5em%3B%20line%2Dheight%3A1%2E2em%3B%7D%0Ah2%7B%20font%2Dsize%3A2em%3B%20%7D%0Ah3%7B%20font%2Dsize%3A1%2E5em%3B%20%7D%0Ah4%7B%20font%2Dsize%3A1%2E2em%3B%20%7D%0Ah5%7B%20font%2Dsize%3A1em%3B%20%7D%0Ah6%7B%20font%2Dsize%3A0%2E9em%3B%20%7D%0A%0Ablockquote%7B%0Acolor%3A%2300CC00%3B%0Amargin%3A0%3B%0Apadding%2Dleft%3A%203em%3B%0Aborder%2Dleft%3A%200%2E5em%20%23EEE%20solid%3B%0A%7D%0Ahr%20%7B%20display%3A%20block%3B%20height%3A%200px%3B%20border%3A%200%3B%20border%2Dtop%3A%202px%20solid%20silver%3Bborder%2Dbottom%3A%200px%20solid%20%23eee%3B%20margin%3A%201em%200%3B%20padding%3A%200%3B%20%7D%0A%0Apre%20%7B%0A%20%20%20background%2Dcolor%3A%20%23f8f8f8%3B%0A%20%20%20border%3A%201px%20solid%20%23cccccc%3B%0A%20%20%20font%2Dsize%3A%2090%25%3B%0A%20%20%20line%2Dheight%3A%201%2E5%3B%0A%20%20%20border%2Dradius%3A%203px%3B%0A%20%20%20white%2Dspace%3A%20pre%3B%20%0A%20%20%20white%2Dspace%3A%20pre%2Dwrap%3B%20%0A%20%20%20word%2Dwrap%3A%20break%2Dword%3B%0A%20%20%20border%3A1px%20solid%20%23ddd%3B%0A%20%20%20background%2Dcolor%3A%23f1f1f1%3B%0A%20%20%20%2Dwebkit%2Dborder%2Dradius%3A6px%3B%0A%20%20%20%2Dmoz%2Dborder%2Dradius%3A6px%3B%0A%20%20%20border%2Dradius%3A6px%3B%0A%20%20%20padding%3A10px%3B%20%20%20%20%0A%7D%0A%0Apre%2C%20code%2C%20kbd%2C%20samp%20%7B%0A%20%20%20background%2Dcolor%3A%20%23f8f8f8%3B%0A%20%20%20color%3A%20%23000%3B%20%0A%20%20%20font%2Dfamily%3A%20Pragmata%2C%20Menlo%2C%20%27DejaVu%20LGC%20Sans%20Mono%27%2C%20%27DejaVu%20Sans%20Mono%27%2C%20Consolas%2C%20%27Everson%20Mono%27%2C%20%27Lucida%20Console%27%2C%20%27Andale%20Mono%27%2C%20%27Nimbus%20Mono%20L%27%2C%20%27Liberation%20Mono%27%2C%20FreeMono%2C%20%27Osaka%20Monospaced%27%2C%20Courier%2C%20%27New%20Courier%27%2C%20monospace%3B%0A%20%20%20line%2Dheight%3A%201%2E5%3B%0A%20%20%20font%2Dsize%3A%2090%25%3B%0A%20%20%20white%2Dspace%3A%20pre%2Dwrap%3B%0A%20%20%20word%2Dwrap%3A%20break%2Dword%3B%20%0A%7D%0A%0Ab%2C%20strong%20%7B%20font%2Dweight%3A%20bold%3B%20%7D%0A%0Adfn%20%7B%20font%2Dstyle%3A%20italic%3B%20%7D%0A%0Ains%20%7B%20background%3A%20%23ff9%3B%20color%3A%20%23000%3B%20text%2Ddecoration%3A%20none%3B%20%7D%0A%0Amark%20%7B%20background%3A%20%23ff0%3B%20color%3A%20%23000%3B%20font%2Dstyle%3A%20italic%3B%20font%2Dweight%3A%20bold%3B%20%7D%0A%0Asub%2C%20sup%20%7B%20font%2Dsize%3A%2075%25%3B%20line%2Dheight%3A%200%3B%20position%3A%20relative%3B%20vertical%2Dalign%3A%20baseline%3B%20%7D%0Asup%20%7B%20top%3A%20%2D0%2E5em%3B%20%7D%0Asub%20%7B%20bottom%3A%20%2D0%2E25em%3B%20%7D%0A%0Aul%2C%20ol%20%7B%20margin%3A%200em%200%3B%20padding%3A%200%200%200%202em%3B%20%7D%0Ali%20p%3Alast%2Dchild%20%7B%20margin%3A0%20%7D%0Add%20%7B%20margin%3A%200%200%200%202em%3B%20%7D%0A%0Aimg%20%7B%20border%3A%200%3B%20%2Dms%2Dinterpolation%2Dmode%3A%20bicubic%3B%20vertical%2Dalign%3A%20middle%3B%20%7D%0A%0Atable%0A%7B%0A%09font%2Dfamily%3A%20Helvetica%2C%20Verdana%2C%20Pragmata%2C%20Menlo%2C%20%27DejaVu%20LGC%20Sans%20Mono%27%2C%20%27DejaVu%20Sans%20Mono%27%2C%20Consolas%2C%20%27Everson%20Mono%27%2C%20%27Lucida%20Console%27%2C%20%27Andale%20Mono%27%2C%20%27Nimbus%20Mono%20L%27%2C%20%27Liberation%20Mono%27%2C%20FreeMono%2C%20%27Osaka%20Monospaced%27%2C%20Courier%2C%20%27New%20Courier%27%2C%20monospace%3B%0A%20%20%20%20font%2Dsize%3A%2014px%3B%0A%09border%2Dcollapse%3Acollapse%3B%0A%09margin%3A20px%200%200%3B%0A%09padding%3A0%3B%0A%7D%0A%0Atable%20tr%0A%7B%0A%09border%2Dtop%3A1px%20solid%20%23ccc%3B%0A%09background%2Dcolor%3A%23fff%3B%0A%09margin%3A0%3B%0A%09padding%3A0%3B%0A%7D%0A%0Atable%20tr%3Anth%2Dchild%282n%29%0A%7B%0A%09background%2Dcolor%3A%23f8f8f8%3B%0A%7D%0Atable%20tr%20th%5Balign%3D%22center%22%5D%2C%20table%20tr%20td%5Balign%3D%22center%22%5D%20%7B%0A%09text%2Dalign%3Acenter%3B%0A%7D%0Atable%20tr%20th%2C%20table%20tr%20td%0A%7B%0A%09border%3A1px%20solid%20%23ccc%3B%0A%09text%2Dalign%3Aleft%3B%0A%09margin%3A0%3B%0A%09padding%3A6px%2013px%3B%0A%7D%0Atd%20%7B%20padding%3A%200px%200px%200px%200px%3B%20%7D%0A%0A%2F%2A%20%40media%20only%20screen%20and%20%28min%2Dwidth%3A%20480px%29%20%7B%0Abody%7Bfont%2Dsize%3A14px%3B%7D%0A%7D%0A%0A%40media%20only%20screen%20and%20%28min%2Dwidth%3A%20768px%29%20%7B%0Abody%7Bfont%2Dsize%3A16px%3B%7D%0A%7D%20%2A%2F%0A%0Adiv%23TOC%2C%20nav%23TOC%0A%20%7B%0A%20%20%20%20%2F%2A%20Put%20border%20on%20bottom%20to%20separate%20it%20from%20body%2E%20%2A%2F%0A%20%20%20%20%2F%2A%20border%2Dbottom%3A%201px%20solid%20%23aaa%3B%20%2A%2F%0A%20%20%20%20margin%2Dbottom%3A%200%2E5em%3B%0A%09margin%2Dtop%3A%203%2E0em%3B%0A%7D%0A%23TOC%20%7B%0A%20%20position%3A%20fixed%3B%0A%20%20margin%3A%201em%3B%0A%20%20padding%3A%201em%3B%0A%20%20left%3A%200px%3B%0A%20%20top%3A%202px%3B%0A%20%20width%3A%20200px%3B%20%0A%20%20height%3A%20auto%3B%20%0A%20%20background%2Dcolor%3A%20%23F8F8F8%3B%0A%20%20border%3A%200px%20solid%20black%3B%0A%20%20font%2Dsize%3A%2085%25%20%20%0A%7D%0A%0A%40media%20print%20%7B%0A%20%20%2A%20%7B%20background%3A%20transparent%20%21important%3B%20color%3A%20black%20%21important%3B%20filter%3Anone%20%21important%3B%20%2Dms%2Dfilter%3A%20none%20%21important%3B%20%7D%0A%20%20body%7Bfont%2Dsize%3A12pt%3B%20max%2Dwidth%3A100%25%3B%7D%0A%20%20a%2C%20a%3Avisited%20%7B%20text%2Ddecoration%3A%20underline%3B%20%7D%0A%20%20hr%20%7B%20height%3A%201px%3B%20border%3A0%3B%20border%2Dbottom%3A1px%20solid%20black%3B%20%7D%0A%20%20a%5Bhref%5D%3Aafter%20%7B%20content%3A%20%22%20%28%22%20attr%28href%29%20%22%29%22%3B%20%7D%0A%20%20abbr%5Btitle%5D%3Aafter%20%7B%20content%3A%20%22%20%28%22%20attr%28title%29%20%22%29%22%3B%20%7D%0A%20%20%2Eir%20a%3Aafter%2C%20a%5Bhref%5E%3D%22javascript%3A%22%5D%3Aafter%2C%20a%5Bhref%5E%3D%22%23%22%5D%3Aafter%20%7B%20content%3A%20%22%22%3B%20%7D%0A%20%20pre%2C%20blockquote%20%7B%20border%3A%201px%20solid%20%23999%3B%20padding%2Dright%3A%201em%3B%20page%2Dbreak%2Dinside%3A%20avoid%3B%20%7D%0A%20%20tr%2C%20img%20%7B%20page%2Dbreak%2Dinside%3A%20avoid%3B%20%7D%0A%20%20img%20%7B%20max%2Dwidth%3A%20100%25%20%21important%3B%20%7D%0A%20%20%40page%20%3Aleft%20%7B%20margin%3A%2015mm%2020mm%2015mm%2010mm%3B%20%7D%0A%20%20%40page%20%3Aright%20%7B%20margin%3A%2015mm%2010mm%2015mm%2020mm%3B%20%7D%0A%20%20p%2C%20h2%2C%20h3%20%7B%20orphans%3A%203%3B%20widows%3A%203%3B%20%7D%0A%20%20h2%2C%20h3%20%7B%20page%2Dbreak%2Dafter%3A%20avoid%3B%20%7D%0A%7D%0A%0Ah1%2Etitle%7Btext%2Dalign%3A%20center%3B%7D%0Ah2%2Eauthor%7Btext%2Dalign%3A%20center%3B%20font%2Dsize%3A%201%2E75em%7D%0Ah3%2Edate%7Btext%2Dalign%3A%20center%3B%20%20font%2Dsize%3A%201%2E25em%7D%0A%0A" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+<h1 class="title">Predicting Quality of Personal Activity using Machine Learning Algorithms</h1>
+<h2 class="author">Student</h2>
+<h3 class="date">July 19, 2011</h3>
+</div>
+<div id="TOC">
+<ul>
+<li><a href="#summary">Summary</a></li>
+<li><a href="#data-loading">Data Loading</a></li>
+<li><a href="#data-pre-processing">Data Pre-processing</a><ul>
+<li><a href="#feature-selection">Feature Selection</a></li>
+<li><a href="#training-and-validation-sets">Training and Validation Sets</a></li>
+</ul></li>
+<li><a href="#predictive-modeling">Predictive Modeling</a><ul>
+<li><a href="#fitmodel-function">FitModel Function</a></li>
+<li><a href="#train-models">Train Models</a></li>
+<li><a href="#ensemble-combined-predictors">Ensemble: Combined Predictors</a></li>
+</ul></li>
+<li><a href="#comparison">Comparison</a><ul>
+<li><a href="#accuracy">Accuracy</a></li>
+<li><a href="#sensitivity">Sensitivity</a></li>
+<li><a href="#specificity">Specificity</a></li>
+</ul></li>
+<li><a href="#predictions-on-testing-data">Predictions on Testing Data</a></li>
+<li><a href="#concluding-remarks">Concluding Remarks</a></li>
+<li><a href="#document-information">Document Information</a></li>
+</ul>
+</div>
+<p> </p>
+<h2 id="summary">Summary</h2>
+<hr />
+<p>Using devices such as <em>Jawbone Up</em>, <em>Nike FuelBand</em>, and <em>Fitbit</em> it is now possible to collect a large amount of data about personal activity relatively inexpensively. In this project, the goal is to use data from accelerometers on the belt, forearm, arm, and dumbell of 6 participants to quantify <em>how well</em> a particular activity is done. The participants were asked to perform barbell lifts correctly and incorrectly in 5 different ways. More information is available from the website here: <a href="http://groupware.les.inf.puc-rio.br/har">http://groupware.les.inf.puc-rio.br/har</a> (see the section on the Weight Lifting Exercise Dataset).</p>
+<h2 id="data-loading">Data Loading</h2>
+<hr />
+<p>The data for this project come from this source: http://groupware.les.inf.puc-rio.br/har. First the data is downloaded. On inspection it is found that there is missing data denoted by <code>NA</code> or <code>#DIV/0!</code>. These are replaced by <code>NA</code>.</p>
+<pre class="sourceCode r"><code class="sourceCode r">DownloadAndReadFile &lt;-<span class="st"> </span>function(file.url, filename, nastrings){
+  <span class="co"># Download training data if not already download</span>
+  if (!<span class="kw">file.exists</span>(filename)){
+    <span class="kw">download.file</span>(file.url, <span class="dt">destfile =</span> filename)
+    download.date &lt;-<span class="st"> </span><span class="kw">date</span>()  <span class="co"># Date stamp the downloaded data</span>
+  }
+  
+  <span class="kw">read.csv</span>(filename, <span class="dt">header =</span> <span class="ot">TRUE</span>, <span class="dt">na.strings =</span> nastrings)  
+}
+
+training.url &lt;-<span class="st"> &quot;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-training.csv&quot;</span>
+testing.url  &lt;-<span class="st"> &quot;https://d396qusza40orc.cloudfront.net/predmachlearn/pml-testing.csv&quot;</span>
+
+nastrings &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;NA&quot;</span>, <span class="st">&quot;#DIV/0!&quot;</span>)
+data.training &lt;-<span class="st"> </span><span class="kw">DownloadAndReadFile</span>(training.url, <span class="st">&quot;training.csv&quot;</span>, nastrings)
+data.testing  &lt;-<span class="st"> </span><span class="kw">DownloadAndReadFile</span>(testing.url,  <span class="st">&quot;testing.csv&quot;</span>,  nastrings)</code></pre>
+<p>The training data contains 19622 rows and 160 columns.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(data.training)</code></pre>
+<pre><code>[1] 19622   160</code></pre>
+<p>And the testing data contains 20 rows and 160 columns</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">dim</span>(data.testing)</code></pre>
+<pre><code>[1]  20 160</code></pre>
+<h2 id="data-pre-processing">Data Pre-processing</h2>
+<hr />
+<p>As mentioned above, the <em>training</em> and <em>testing</em> data sets contain missing values. So columns with <code>NA</code> are removed in the datasets. Also, columns that are not relevant to any sensor measurements are removed since these cannot be used to build a model.</p>
+<h3 id="feature-selection">Feature Selection</h3>
+<pre class="sourceCode r"><code class="sourceCode r">na.cols       &lt;-<span class="st"> </span><span class="kw">colSums</span>(!<span class="kw">is.na</span>(data.training)) ==<span class="st"> </span><span class="kw">nrow</span>(data.training)
+data.training &lt;-<span class="st"> </span>data.training[, na.cols]; 
+data.testing  &lt;-<span class="st"> </span>data.testing[, na.cols];  
+
+rm.cols &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;X&quot;</span>, <span class="st">&quot;user_name&quot;</span>, <span class="st">&quot;raw_timestamp_part_1&quot;</span>, <span class="st">&quot;raw_timestamp_part_2&quot;</span>,  
+             <span class="st">&quot;cvtd_timestamp&quot;</span>, <span class="st">&quot;new_window&quot;</span>,  <span class="st">&quot;num_window&quot;</span>)
+data.training &lt;-<span class="st"> </span>data.training[, !(<span class="kw">colnames</span>(data.training) %in%<span class="st"> </span>rm.cols)]
+data.testing  &lt;-<span class="st"> </span>data.testing[, !(<span class="kw">colnames</span>(data.testing) %in%<span class="st"> </span>rm.cols)]</code></pre>
+<p>The <em>training</em> and <em>testing</em> sets now have 53 columns. All columns in the training set are <code>numeric</code> or <code>int</code> except for <code>classe</code> (variable of interest) which is a <code>factor</code> (as desired).</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">str</span>(data.training)</code></pre>
+<pre><code>'data.frame':   19622 obs. of  53 variables:
+ $ roll_belt           : num  1.41 1.41 1.42 1.48 1.48 1.45 1.42 1.42 1.43 1.45 ...
+ $ pitch_belt          : num  8.07 8.07 8.07 8.05 8.07 8.06 8.09 8.13 8.16 8.17 ...
+ $ yaw_belt            : num  -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 -94.4 ...
+ $ total_accel_belt    : int  3 3 3 3 3 3 3 3 3 3 ...
+ $ gyros_belt_x        : num  0 0.02 0 0.02 0.02 0.02 0.02 0.02 0.02 0.03 ...
+ $ gyros_belt_y        : num  0 0 0 0 0.02 0 0 0 0 0 ...
+ $ gyros_belt_z        : num  -0.02 -0.02 -0.02 -0.03 -0.02 -0.02 -0.02 -0.02 -0.02 0 ...
+ $ accel_belt_x        : int  -21 -22 -20 -22 -21 -21 -22 -22 -20 -21 ...
+ $ accel_belt_y        : int  4 4 5 3 2 4 3 4 2 4 ...
+ $ accel_belt_z        : int  22 22 23 21 24 21 21 21 24 22 ...
+ $ magnet_belt_x       : int  -3 -7 -2 -6 -6 0 -4 -2 1 -3 ...
+ $ magnet_belt_y       : int  599 608 600 604 600 603 599 603 602 609 ...
+ $ magnet_belt_z       : int  -313 -311 -305 -310 -302 -312 -311 -313 -312 -308 ...
+ $ roll_arm            : num  -128 -128 -128 -128 -128 -128 -128 -128 -128 -128 ...
+ $ pitch_arm           : num  22.5 22.5 22.5 22.1 22.1 22 21.9 21.8 21.7 21.6 ...
+ $ yaw_arm             : num  -161 -161 -161 -161 -161 -161 -161 -161 -161 -161 ...
+ $ total_accel_arm     : int  34 34 34 34 34 34 34 34 34 34 ...
+ $ gyros_arm_x         : num  0 0.02 0.02 0.02 0 0.02 0 0.02 0.02 0.02 ...
+ $ gyros_arm_y         : num  0 -0.02 -0.02 -0.03 -0.03 -0.03 -0.03 -0.02 -0.03 -0.03 ...
+ $ gyros_arm_z         : num  -0.02 -0.02 -0.02 0.02 0 0 0 0 -0.02 -0.02 ...
+ $ accel_arm_x         : int  -288 -290 -289 -289 -289 -289 -289 -289 -288 -288 ...
+ $ accel_arm_y         : int  109 110 110 111 111 111 111 111 109 110 ...
+ $ accel_arm_z         : int  -123 -125 -126 -123 -123 -122 -125 -124 -122 -124 ...
+ $ magnet_arm_x        : int  -368 -369 -368 -372 -374 -369 -373 -372 -369 -376 ...
+ $ magnet_arm_y        : int  337 337 344 344 337 342 336 338 341 334 ...
+ $ magnet_arm_z        : int  516 513 513 512 506 513 509 510 518 516 ...
+ $ roll_dumbbell       : num  13.1 13.1 12.9 13.4 13.4 ...
+ $ pitch_dumbbell      : num  -70.5 -70.6 -70.3 -70.4 -70.4 ...
+ $ yaw_dumbbell        : num  -84.9 -84.7 -85.1 -84.9 -84.9 ...
+ $ total_accel_dumbbell: int  37 37 37 37 37 37 37 37 37 37 ...
+ $ gyros_dumbbell_x    : num  0 0 0 0 0 0 0 0 0 0 ...
+ $ gyros_dumbbell_y    : num  -0.02 -0.02 -0.02 -0.02 -0.02 -0.02 -0.02 -0.02 -0.02 -0.02 ...
+ $ gyros_dumbbell_z    : num  0 0 0 -0.02 0 0 0 0 0 0 ...
+ $ accel_dumbbell_x    : int  -234 -233 -232 -232 -233 -234 -232 -234 -232 -235 ...
+ $ accel_dumbbell_y    : int  47 47 46 48 48 48 47 46 47 48 ...
+ $ accel_dumbbell_z    : int  -271 -269 -270 -269 -270 -269 -270 -272 -269 -270 ...
+ $ magnet_dumbbell_x   : int  -559 -555 -561 -552 -554 -558 -551 -555 -549 -558 ...
+ $ magnet_dumbbell_y   : int  293 296 298 303 292 294 295 300 292 291 ...
+ $ magnet_dumbbell_z   : num  -65 -64 -63 -60 -68 -66 -70 -74 -65 -69 ...
+ $ roll_forearm        : num  28.4 28.3 28.3 28.1 28 27.9 27.9 27.8 27.7 27.7 ...
+ $ pitch_forearm       : num  -63.9 -63.9 -63.9 -63.9 -63.9 -63.9 -63.9 -63.8 -63.8 -63.8 ...
+ $ yaw_forearm         : num  -153 -153 -152 -152 -152 -152 -152 -152 -152 -152 ...
+ $ total_accel_forearm : int  36 36 36 36 36 36 36 36 36 36 ...
+ $ gyros_forearm_x     : num  0.03 0.02 0.03 0.02 0.02 0.02 0.02 0.02 0.03 0.02 ...
+ $ gyros_forearm_y     : num  0 0 -0.02 -0.02 0 -0.02 0 -0.02 0 0 ...
+ $ gyros_forearm_z     : num  -0.02 -0.02 0 0 -0.02 -0.03 -0.02 0 -0.02 -0.02 ...
+ $ accel_forearm_x     : int  192 192 196 189 189 193 195 193 193 190 ...
+ $ accel_forearm_y     : int  203 203 204 206 206 203 205 205 204 205 ...
+ $ accel_forearm_z     : int  -215 -216 -213 -214 -214 -215 -215 -213 -214 -215 ...
+ $ magnet_forearm_x    : int  -17 -18 -18 -16 -17 -9 -18 -9 -16 -22 ...
+ $ magnet_forearm_y    : num  654 661 658 658 655 660 659 660 653 656 ...
+ $ magnet_forearm_z    : num  476 473 469 469 473 478 470 474 476 473 ...
+ $ classe              : Factor w/ 5 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</code></pre>
+<h3 id="training-and-validation-sets">Training and Validation Sets</h3>
+<p>The original <em>training</em> set is further subdivided into <em>training</em> and <em>validation</em> sets for the purposes of modeling. The random number generator (RNG) state is (seed) is set to 12321. The <em>training</em> set is partitioned so as to contain 70% of the original data (13737 rows). The remainder of the data (5885 rows) is assigned to the <code>validation</code> set.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">12321</span>)
+
+<span class="kw">library</span>(caret)</code></pre>
+<pre><code>Loading required package: lattice
+Loading required package: ggplot2</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">inTrain &lt;-<span class="st"> </span><span class="kw">createDataPartition</span>(<span class="dt">y =</span> data.training$classe, <span class="dt">p =</span> <span class="fl">0.70</span>, <span class="dt">list =</span> <span class="ot">FALSE</span>)
+
+training   &lt;-<span class="st"> </span>data.training[inTrain, ] 
+validation &lt;-<span class="st"> </span>data.training[-inTrain, ]
+
+testing &lt;-<span class="st"> </span>data.testing[, -<span class="kw">ncol</span>(data.testing)]</code></pre>
+<h2 id="predictive-modeling">Predictive Modeling</h2>
+<hr />
+<blockquote>
+<p>Since the <em>classe</em> variable is a factor this is a <strong>classification</strong> problem.</p>
+</blockquote>
+<p>The strategy is to use the following four machine learning methods:</p>
+<ul>
+<li>Random Forest</li>
+<li>Bagged CART</li>
+<li>Support Vector Machines with Radial Basis Function Kernel</li>
+<li>k-Nearest Neighbors</li>
+</ul>
+<p>Followed by an <em>ensemble</em> model.</p>
+<blockquote>
+<p>Throughout this project, the <em>caret</em> package is used for training, validation and testing the models.</p>
+</blockquote>
+<p>A <code>models</code> object is used to store all information. The object contains the following parameters:</p>
+<table>
+<colgroup>
+<col width="37%"></col>
+<col width="48%"></col>
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Parameter</th>
+<th align="left">Information</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">name</td>
+<td align="left">List of model names</td>
+</tr>
+<tr class="even">
+<td align="left">method</td>
+<td align="left">Character strings corresponding to each model in models$name given as argument to caret's <code>train</code> function</td>
+</tr>
+<tr class="odd">
+<td align="left">fit</td>
+<td align="left">Fit information returned from <code>train</code> function corresponding to each model in models$name</td>
+</tr>
+<tr class="even">
+<td align="left">pred$validation</td>
+<td align="left">Predictions of models on validation set</td>
+</tr>
+<tr class="odd">
+<td align="left">pred$testing</td>
+<td align="left">Predictions of models on testing set</td>
+</tr>
+<tr class="even">
+<td align="left">confmat</td>
+<td align="left">Confusion matrix for each model applied to the validation set</td>
+</tr>
+<tr class="odd">
+<td align="left">confmat$summary</td>
+<td align="left">Dataframe of accuracy parameters from each model</td>
+</tr>
+<tr class="even">
+<td align="left">ensemble$fit</td>
+<td align="left">Fit information for <em>ensemble</em> model using the Random Forest algorithm</td>
+</tr>
+<tr class="odd">
+<td align="left">ensemble$pred$validation</td>
+<td align="left">Predictions of <em>ensemble</em> model on validation set</td>
+</tr>
+<tr class="even">
+<td align="left">ensemble$pred$testing</td>
+<td align="left">Predictions of <em>ensemble</em> model on testing set</td>
+</tr>
+<tr class="odd">
+<td align="left">ensemble$confmat</td>
+<td align="left">Confusion matrix for <em>ensemble</em> model applied to the validation set</td>
+</tr>
+</tbody>
+</table>
+<h3 id="fitmodel-function">FitModel Function</h3>
+<p>We begin by defining a generic function which contains training options common to all models in the <code>train</code> function. This function takes the training data, <code>data.train</code>, and the model method, <code>model.method</code> and applies the <code>train</code> function to create the model.</p>
+<p>A <em>repeated cross-validation</em> scheme is used with <em>4 folds and 1 repeat</em>. PCA is used as a pre-processing algorithm and verbosity is turned off.</p>
+<pre class="sourceCode r"><code class="sourceCode r">FitModel &lt;-<span class="st"> </span>function(data.train, <span class="dt">model.method =</span> <span class="st">&quot;rf&quot;</span>){
+  
+  trn.ctrl &lt;-<span class="st"> </span><span class="kw">trainControl</span>(<span class="dt">method =</span> <span class="st">'repeatedcv'</span>, 
+                           <span class="dt">number =</span> <span class="dv">4</span>,            <span class="dt">repeats =</span> <span class="dv">1</span>, 
+                           <span class="dt">returnResamp =</span> <span class="st">'none'</span>, <span class="dt">classProbs =</span> <span class="ot">TRUE</span>,
+                           <span class="dt">returnData =</span> <span class="ot">FALSE</span>,    <span class="dt">savePredictions =</span> <span class="ot">TRUE</span>, 
+                           <span class="dt">verboseIter =</span> <span class="ot">FALSE</span>,   <span class="dt">allowParallel=</span><span class="ot">TRUE</span>)  
+  
+  model &lt;-<span class="st"> </span><span class="kw">train</span>(classe ~<span class="st"> </span>., <span class="dt">data =</span> data.train, <span class="dt">method =</span> model.method,
+                 <span class="dt">trControl =</span> trn.ctrl, <span class="dt">preProcess =</span> <span class="kw">c</span>(<span class="st">&quot;pca&quot;</span>), 
+                 <span class="dt">verbose =</span> <span class="ot">FALSE</span>, <span class="dt">trace =</span> <span class="ot">FALSE</span>)
+  
+  <span class="kw">list</span>(model)
+  
+}</code></pre>
+<h3 id="train-models">Train Models</h3>
+<p>With the FiModel function above, it is now simple to obtain a list of models to the training data using <code>sapply</code> as shown below. All fit information is stored in the <code>models</code> object. Note that the RNG seed is set to 97611.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(randomForest)</code></pre>
+<pre><code>randomForest 4.6-7
+Type rfNews() to see new features/changes/bug fixes.</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ipred)
+<span class="kw">library</span>(kernlab)
+<span class="kw">library</span>(kknn)</code></pre>
+<pre><code>
+Attaching package: 'kknn'
+
+The following object is masked from 'package:caret':
+
+    contr.dummy</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">97611</span>)
+
+models &lt;-<span class="st"> </span><span class="kw">c</span>()
+
+models$name   &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;RandomForest&quot;</span>, <span class="st">&quot;BaggedCART&quot;</span>, <span class="st">&quot;SVMRadial&quot;</span>, <span class="st">&quot;kNearestNeighbors&quot;</span>)
+models$method &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;rf&quot;</span>, <span class="st">&quot;treebag&quot;</span>, <span class="st">&quot;svmRadial&quot;</span>, <span class="st">&quot;kknn&quot;</span>)
+
+models$fit &lt;-<span class="st"> </span><span class="kw">sapply</span>(models$method, 
+                     function(x) <span class="kw">FitModel</span>(training, <span class="dt">model.method =</span> x))</code></pre>
+<pre><code>Loading required package: plyr</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">nmodels &lt;-<span class="st"> </span><span class="kw">length</span>(models$fit)</code></pre>
+<h4 id="predictions-on-validation-set-out-of-sample">Predictions on Validation Set (Out-of-Sample)</h4>
+<p>Predictions for each model on the validation data set are obtained and saved in the <code>models</code> object. These will be be compared to predictions from the <em>ensemble</em> later.</p>
+<pre class="sourceCode r"><code class="sourceCode r">models$pred$validation &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>, nmodels), 
+                                 function(x) <span class="kw">predict</span>(models$fit[[x]], validation))
+models$pred$validation &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(models$pred$validation)
+<span class="kw">colnames</span>(models$pred$validation) &lt;-<span class="st"> </span>models$name</code></pre>
+<h4 id="confusion-matrices">Confusion Matrices</h4>
+<p>The confusion matrices corresponding to each model are obtained for the validation data set. Again, these are saved in the <code>models</code> object for comparison with the corresponding confusion matrix from the <em>ensemble</em> model.</p>
+<pre class="sourceCode r"><code class="sourceCode r">models$confmat  &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>, nmodels),
+         function(x) 
+           <span class="kw">list</span>(<span class="kw">confusionMatrix</span>(models$pred$validation[, x], validation$classe)))
+
+models$confmat$summary &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>, nmodels), 
+                                 function(x) models$confmat[[x]]$overall)
+models$confmat$summary &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(models$confmat$summary)
+<span class="kw">colnames</span>(models$confmat$summary) &lt;-<span class="st"> </span>models$name</code></pre>
+<h3 id="ensemble-combined-predictors">Ensemble: Combined Predictors</h3>
+<p>The <em>ensemble</em> model &quot;stacks&quot; the predictors obtained from the four machine learning models used before. The fit, predictions on the validation set and the confusion matrix are all stored in the <code>models$ensemble</code> object.</p>
+<pre class="sourceCode r"><code class="sourceCode r">ensemble.df &lt;-<span class="st"> </span><span class="kw">cbind</span>(models$pred$validation, <span class="dt">classe =</span> validation$classe)
+models$ensemble$fit &lt;-<span class="st"> </span><span class="kw">FitModel</span>(ensemble.df, <span class="dt">model.method =</span> <span class="st">&quot;rf&quot;</span>)[[<span class="dv">1</span>]]
+
+models$ensemble$pred$validation &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">predict</span>(models$ensemble$fit, models$pred$validation)
+models$ensemble$confmat &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">confusionMatrix</span>(models$ensemble$pred$validation, validation$classe)</code></pre>
+<h2 id="comparison">Comparison</h2>
+<hr />
+<p>All models can now be compared. Since this is a classification problem, accuracy, sensitivity and specificity are used as metrics to assess the prediction quality of each model.</p>
+<h3 id="accuracy">Accuracy</h3>
+<p>As seen below, the <em>kNearestNeighbors</em> has the highest accuracy of individual models but the <em>ensemble</em> model has the highest accuracy. The lower and upper bounds on accuracy are also summarized in the table and are tightest for the ensemble model.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(xtable)
+confmat.summary &lt;-<span class="st"> </span><span class="kw">cbind</span>(models$confmat$summary, 
+                         <span class="dt">Ensemble =</span> models$ensemble$confmat$overall)
+<span class="kw">print</span>(<span class="kw">xtable</span>(confmat.summary), <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</code></pre>
+<!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
+<!-- Sun Jul 20 21:46:37 2014 -->
+<TABLE border="1">
+<TR> <TH>  </TH> <TH> 
+RandomForest
+</TH> <TH> 
+BaggedCART
+</TH> <TH> 
+SVMRadial
+</TH> <TH> 
+kNearestNeighbors
+</TH> <TH> 
+Ensemble
+</TH>  </TR>
+  <TR> <TD align="right"> 
+Accuracy
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.95
+</TD> <TD align="right"> 
+0.79
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+Kappa
+</TD> <TD align="right"> 
+0.97
+</TD> <TD align="right"> 
+0.94
+</TD> <TD align="right"> 
+0.73
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+AccuracyLower
+</TD> <TD align="right"> 
+0.97
+</TD> <TD align="right"> 
+0.95
+</TD> <TD align="right"> 
+0.78
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+AccuracyUpper
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.96
+</TD> <TD align="right"> 
+0.80
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+AccuracyNull
+</TD> <TD align="right"> 
+0.28
+</TD> <TD align="right"> 
+0.28
+</TD> <TD align="right"> 
+0.28
+</TD> <TD align="right"> 
+0.28
+</TD> <TD align="right"> 
+0.28
+</TD> </TR>
+  <TR> <TD align="right"> 
+AccuracyPValue
+</TD> <TD align="right"> 
+0.00
+</TD> <TD align="right"> 
+0.00
+</TD> <TD align="right"> 
+0.00
+</TD> <TD align="right"> 
+0.00
+</TD> <TD align="right"> 
+0.00
+</TD> </TR>
+  <TR> <TD align="right"> 
+McnemarPValue
+</TD> <TD align="right">  </TD> <TD align="right"> 
+0.00
+</TD> <TD align="right"> 
+0.00
+</TD> <TD align="right">  </TD> <TD align="right">  </TD> </TR>
+   </TABLE>
+
+<h3 id="sensitivity">Sensitivity</h3>
+<p>For each class, <em>kNearestNeighbors</em> and <em>ensemble</em> sensitivities are comparable though the <em>ensemble</em> model seems to be <em>very</em> slightly better than <em>kNearestNeighbors</em> and the best overall.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(xtable)
+sensitivity.summary &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">cbind</span>(<span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>, nmodels), function(x) models$confmat[[x]]$byClass[, <span class="dv">1</span>]), 
+      models$ensemble$confmat$byClass[, <span class="dv">1</span>])
+<span class="kw">colnames</span>(sensitivity.summary) &lt;-<span class="st"> </span><span class="kw">c</span>(models$name, <span class="st">&quot;Ensemble&quot;</span>)
+<span class="kw">print</span>(<span class="kw">xtable</span>(sensitivity.summary), <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</code></pre>
+<!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
+<!-- Sun Jul 20 21:46:37 2014 -->
+<TABLE border="1">
+<TR> <TH>  </TH> <TH> 
+RandomForest
+</TH> <TH> 
+BaggedCART
+</TH> <TH> 
+SVMRadial
+</TH> <TH> 
+kNearestNeighbors
+</TH> <TH> 
+Ensemble
+</TH>  </TR>
+  <TR> <TD align="right"> 
+Class: A
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: B
+</TD> <TD align="right"> 
+0.97
+</TD> <TD align="right"> 
+0.93
+</TD> <TD align="right"> 
+0.89
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: C
+</TD> <TD align="right"> 
+0.97
+</TD> <TD align="right"> 
+0.95
+</TD> <TD align="right"> 
+0.72
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.98
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: D
+</TD> <TD align="right"> 
+0.95
+</TD> <TD align="right"> 
+0.94
+</TD> <TD align="right"> 
+0.37
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: E
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.96
+</TD> <TD align="right"> 
+0.81
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.99
+</TD> </TR>
+   </TABLE>
+
+<h3 id="specificity">Specificity</h3>
+<p>Again, the <em>ensemble</em> model seems to be have the highest specificity for each class when compared to all other models.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(xtable)
+specificity.summary &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">cbind</span>(<span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>, nmodels), function(x) models$confmat[[x]]$byClass[, <span class="dv">2</span>]), 
+      models$ensemble$confmat$byClass[, <span class="dv">2</span>])
+<span class="kw">colnames</span>(specificity.summary) &lt;-<span class="st"> </span><span class="kw">c</span>(models$name, <span class="st">&quot;Ensemble&quot;</span>)
+<span class="kw">print</span>(<span class="kw">xtable</span>(specificity.summary), <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</code></pre>
+<!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
+<!-- Sun Jul 20 21:46:37 2014 -->
+<TABLE border="1">
+<TR> <TH>  </TH> <TH> 
+RandomForest
+</TH> <TH> 
+BaggedCART
+</TH> <TH> 
+SVMRadial
+</TH> <TH> 
+kNearestNeighbors
+</TH> <TH> 
+Ensemble
+</TH>  </TR>
+  <TR> <TD align="right"> 
+Class: A
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.94
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+1.00
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: B
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.93
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+1.00
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: C
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.98
+</TD> <TD align="right"> 
+0.94
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+1.00
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: D
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.97
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+1.00
+</TD> </TR>
+  <TR> <TD align="right"> 
+Class: E
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+0.99
+</TD> <TD align="right"> 
+0.95
+</TD> <TD align="right"> 
+1.00
+</TD> <TD align="right"> 
+1.00
+</TD> </TR>
+   </TABLE>
+
+<h2 id="predictions-on-testing-data">Predictions on Testing Data</h2>
+<hr />
+<p>All five models are used to predict the <code>classe</code> variable for the 20 observations in the testing data set.</p>
+<pre class="sourceCode r"><code class="sourceCode r">models$pred$testing    &lt;-<span class="st"> </span><span class="kw">sapply</span>(<span class="kw">seq</span>(<span class="dv">1</span>, nmodels), 
+                                 function(x) <span class="kw">predict</span>(models$fit[[x]], testing))
+models$pred$testing &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(models$pred$testing)
+<span class="kw">colnames</span>(models$pred$testing) &lt;-<span class="st"> </span>models$name
+
+models$ensemble$pred$testing &lt;-<span class="st"> </span><span class="kw">predict</span>(models$ensemble$fit, models$pred$testing)</code></pre>
+<p>The table below shows that all models predict the exact same outcome for all the observations, except for the 3rd observation by <em>RandomForest</em> and the 3rd and 11th observations by <em>SVMRadial</em>. One can therefore have high confidence in the predictions.</p>
+<pre class="sourceCode r"><code class="sourceCode r">prediction.testing &lt;-<span class="st"> </span><span class="kw">cbind</span>(models$pred$testing, 
+                            <span class="dt">Ensemble =</span> models$ensemble$pred$testing)
+<span class="kw">print</span>(<span class="kw">xtable</span>(<span class="kw">t</span>(prediction.testing)), <span class="dt">type =</span> <span class="st">&quot;html&quot;</span>)</code></pre>
+<!-- html table generated in R 3.1.0 by xtable 1.7-3 package -->
+<!-- Sun Jul 20 21:47:46 2014 -->
+<TABLE border="1">
+<TR> <TH>  </TH> <TH> 
+1
+</TH> <TH> 
+2
+</TH> <TH> 
+3
+</TH> <TH> 
+4
+</TH> <TH> 
+5
+</TH> <TH> 
+6
+</TH> <TH> 
+7
+</TH> <TH> 
+8
+</TH> <TH> 
+9
+</TH> <TH> 
+10
+</TH> <TH> 
+11
+</TH> <TH> 
+12
+</TH> <TH> 
+13
+</TH> <TH> 
+14
+</TH> <TH> 
+15
+</TH> <TH> 
+16
+</TH> <TH> 
+17
+</TH> <TH> 
+18
+</TH> <TH> 
+19
+</TH> <TH> 
+20
+</TH>  </TR>
+  <TR> <TD align="right"> 
+RandomForest
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+C
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+D
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+C
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+E
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> </TR>
+  <TR> <TD align="right"> 
+BaggedCART
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+D
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+C
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+E
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> </TR>
+  <TR> <TD align="right"> 
+SVMRadial
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+C
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+D
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+C
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+E
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> </TR>
+  <TR> <TD align="right"> 
+kNearestNeighbors
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+D
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+C
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+E
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> </TR>
+  <TR> <TD align="right"> 
+Ensemble
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+D
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+C
+</TD> <TD> 
+B
+</TD> <TD> 
+A
+</TD> <TD> 
+E
+</TD> <TD> 
+E
+</TD> <TD> 
+A
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> <TD> 
+B
+</TD> </TR>
+   </TABLE>
+
+
+<h2 id="concluding-remarks">Concluding Remarks</h2>
+<hr />
+<p>Four machine learning algorithms, RandomForest, BaggedCART, SVMRadial and kNearestNeighbors were used to model the training set. An ensemble model was created using the predictions from the four algorithms. It was found that the <em>kNearestNeighbors</em> has the highest accuracy of the individual algorithms but the <em>ensemble</em> model performed slightly better overall. The ensemble model is used below as answers to predictions on the testing set.</p>
+<pre class="sourceCode r"><code class="sourceCode r">answers &lt;-<span class="st"> </span><span class="kw">as.vector</span>(prediction.testing$Ensemble)
+
+pml_write_files =<span class="st"> </span>function(x) {
+    n =<span class="st"> </span><span class="kw">length</span>(x)
+    for (i in <span class="dv">1</span>:n) {
+        filename =<span class="st"> </span><span class="kw">paste0</span>(<span class="st">&quot;submission/problem_id_&quot;</span>, i, <span class="st">&quot;.txt&quot;</span>)
+        <span class="kw">write.table</span>(x[i], <span class="dt">file =</span> filename, <span class="dt">quote =</span> <span class="ot">FALSE</span>, <span class="dt">row.names =</span> <span class="ot">FALSE</span>, 
+            <span class="dt">col.names =</span> <span class="ot">FALSE</span>)
+    }
+}
+
+<span class="kw">pml_write_files</span>(answers)</code></pre>
+<h2 id="document-information">Document Information</h2>
+<hr />
+<p>This document was generated using knitr and pandoc</p>
+<p><code>knit('project.Rmd')</code></p>
+<p><code>system(&quot;pandoc project.md -o project.html -c custom.css --toc --self-contained --highlight-style=tango&quot;)</code></p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">sessionInfo</span>()</code></pre>
+<pre><code>R version 3.1.0 (2014-04-10)
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+locale:
+[1] LC_COLLATE=English_United States.1252 
+[2] LC_CTYPE=English_United States.1252   
+[3] LC_MONETARY=English_United States.1252
+[4] LC_NUMERIC=C                          
+[5] LC_TIME=English_United States.1252    
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+ [1] xtable_1.7-3       plyr_1.8.1         e1071_1.6-3       
+ [4] kknn_1.2-5         kernlab_0.9-19     ipred_0.9-3       
+ [7] randomForest_4.6-7 caret_6.0-30       ggplot2_0.9.3.1   
+[10] lattice_0.20-29    knitr_1.6.8       
+
+loaded via a namespace (and not attached):
+ [1] BradleyTerry2_1.0-5 brglm_0.5-9         car_2.0-20         
+ [4] class_7.3-10        codetools_0.2-8     colorspace_1.2-4   
+ [7] compiler_3.1.0      digest_0.6.4        evaluate_0.5.5     
+[10] foreach_1.4.2       formatR_0.10        grid_3.1.0         
+[13] gtable_0.1.2        gtools_3.4.1        igraph_0.7.0       
+[16] iterators_1.0.7     lava_1.2.6          lme4_1.1-6         
+[19] MASS_7.3-31         Matrix_1.1-3        minqa_1.2.3        
+[22] munsell_0.4.2       nlme_3.1-117        nnet_7.3-8         
+[25] prodlim_1.4.3       proto_0.3-10        Rcpp_0.11.1        
+[28] RcppEigen_0.3.2.1.2 reshape2_1.4        rpart_4.1-8        
+[31] scales_0.2.4        splines_3.1.0       stringr_0.6.2      
+[34] survival_2.37-7     tools_3.1.0        </code></pre>
+</body>
+</html>
