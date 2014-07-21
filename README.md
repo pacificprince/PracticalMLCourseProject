@@ -46,5 +46,5 @@ https://github.com/pacificprince/PracticalMLCourseProject
 http://pacificprince.github.io/project.html
 
 **gh-page branch** for Project Readme:
-http://pacificprince.github.io/PracticalMLCourseProject
+http://pacificprince.github.io/README.md
 
